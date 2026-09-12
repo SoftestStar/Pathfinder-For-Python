@@ -5,3 +5,5 @@ class node:
         pass
     def draw(self):
         pass
+    def __lt__(self, other): # function for compare Node
+        pass
