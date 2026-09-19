@@ -1,6 +1,5 @@
 import pygame
 import general_algorithm as gal
-import time
 
 ROW = 50
 WIDTH = 800
