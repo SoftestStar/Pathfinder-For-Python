@@ -1,10 +1,107 @@
 import pygame
-from Node import node
+import Node
+from collections import deque
 
-def draw_grid(screen,WIDTH, row, COLOR = (0,0,0)):
+#Finding algorithm
 
-    GAP = WIDTH / row 
+def find_neighbor(grid, node):
+    row, col = node.get_position()
+    rows, cols = len(grid), len(grid[0])
+
+    neighbors = []
+
+    directions = [(-1,0), (1,0), (0,-1), (0,1)]
+
+    for dr, dc in directions:
+        new_row, new_col = row + dr, col + dc
+        if 0 <= new_row < rows and 0 <= new_col < cols:
+            if grid[new_row][new_col].is_empty() or grid[new_row][new_col].is_end():
+                if not grid[new_row][new_col].is_end():
+                    grid[new_row][new_col].set_currenly_visit()
+                neighbors.append(grid[new_row][new_col])
     
-    for i in range(row + 1):
-        pygame.draw.line(screen, COLOR, (0, i*GAP), (WIDTH,i*GAP),1)
-        pygame.draw.line(screen, COLOR, (i*GAP,0), (i*GAP,WIDTH),1)
+    return neighbors
+
+def Bfs_alogorithm(screen ,grid, start ,end, rows, width):
+
+    visited = {start: None}
+    queue = deque([start])
+    meet_end = False
+
+    while queue and not meet_end:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return None
+
+        node = queue.popleft()
+        if node == end:
+            meet_end = True
+        for neighbor in find_neighbor(grid, node):
+            if neighbor not in visited:
+                if not neighbor.is_end():
+                    neighbor.set_visited()
+                visited[neighbor] = node
+                queue.append(neighbor)
+
+        screen.fill((255, 255, 255))
+        draw_node(screen, grid)
+        draw_grid(screen, rows, width)
+        pygame.display.flip()
+        pygame.time.wait(1)
+    
+    if end not in visited:
+        return None
+
+    path = []
+    node = end
+
+    while node is not None:
+        path.append(node)
+        node = visited[node]
+
+    path.reverse()
+    make_path(path)
+
+def make_path(path):
+    for i in path:
+        if not i.is_start() and not i.is_end():
+            i.set_path()
+
+#Grid
+
+def create_grid(rows, width):
+
+    grid = []
+    gap = width // rows
+
+    for i in range(rows):
+        grid.append([])
+        for j in range(rows):
+            node = Node.create_node(i, j, gap, rows)
+            grid[i].append(node)
+    
+    return grid
+
+def draw_grid(screen, rows, width):
+    gap = width // rows
+    for i in range(rows):
+        pygame.draw.line(screen, (000,000,000), (0, i*gap), (width, i*gap))
+    for i in range(rows):
+            pygame.draw.line(screen, (000,000,000), (i*gap, 0), (i*gap, width))
+
+def draw_node(screen, grid):
+    for row in grid:
+        for node in row:
+            node.draw(screen)
+
+def find_clicked_position(pos, rows, width):
+
+    gap = width // rows
+    x, y = pos
+
+    row = x // gap
+    col = y // gap
+
+    return row, col
+
