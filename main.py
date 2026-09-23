@@ -10,6 +10,11 @@ screen = pygame.display.set_mode((WIDTH,WIDTH))
 
 WHILE = (255,255,255)
 BLACK = (000,000,000)
+RED = (255,000,000)
+GREEN = (000,255,000)
+BLUE = (000,000,255)
+YELLOW = (255,255,000)
+PURPLE = (128, 0, 128)
 
 clock = pygame.time.Clock()
 
@@ -19,6 +24,39 @@ start_pos = None
 end_pos = None
 
 start_finding = False
+
+def click_to_draw(grid,row,col):
+    global start_pos, end_pos
+    if not start_pos and not grid[row][col].is_wall():
+        grid[row][col].set_start()
+        start_pos = grid[row][col]
+    elif not end_pos and not grid[row][col].is_wall() and not grid[row][col].is_start():
+        grid[row][col].set_end()
+        end_pos = grid[row][col]
+    elif not grid[row][col].is_start() and not grid[row][col].is_end():
+        grid[row][col].set_wall()
+
+def click_to_remove(grid,row,col):
+    global start_pos, end_pos
+    if grid[row][col].is_start():
+        start_pos = None
+    elif grid[row][col].is_end():
+        end_pos = None
+    grid[row][col].set_empty()
+
+def claer_grid(event):
+    global start_pos, end_pos
+    if event.key == pygame.K_c:
+        for row in grid:
+            for node in row:
+                node.set_empty()
+                start_pos = None
+                end_pos = None
+
+def finding(event):
+    if event.key == pygame.K_SPACE:
+        if start_pos and end_pos:
+            gal.Bfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
 
 is_running = True
 while is_running:
@@ -36,36 +74,22 @@ while is_running:
             if len(grid) - 1 < row or len(grid[row]) - 1 < col or row < 0 or col < 0:
                 continue
 
-            # draw
-            if not start_pos and not grid[row][col].is_wall():
-                grid[row][col].set_start()
-                start_pos = grid[row][col]
-            elif not end_pos and not grid[row][col].is_wall() and not grid[row][col].is_start():
-                grid[row][col].set_end()
-                end_pos = grid[row][col]
-            elif not grid[row][col].is_start() and not grid[row][col].is_end():
-                grid[row][col].set_wall()
+            click_to_draw(grid,row,col)
         
         #set empty
         elif pygame.mouse.get_pressed()[2]:
-            if grid[row][col].is_start():
-                start_pos = None
-            elif grid[row][col].is_end():
-                end_pos = None
-            grid[row][col].set_empty()
+
+            # check if it out of grid
+            if len(grid) - 1 < row or len(grid[row]) - 1 < col or row < 0 or col < 0:
+                continue
+
+            click_to_remove(grid,row,col)
 
         if event.type == pygame.KEYDOWN:
             #claer all
-            if event.key == pygame.K_c:
-                for row in grid:
-                    for node in row:
-                        node.set_empty()
-                        start_pos = None
-                        end_pos = None
+            claer_grid(event)
             #start finding
-            if event.key == pygame.K_SPACE:
-               if start_pos and end_pos:
-                gal.Bfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH)
+            finding(event)
 
     screen.fill(WHILE)
 
