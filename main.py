@@ -23,6 +23,9 @@ grid = gal.create_grid(ROW,WIDTH)
 start_pos = None
 end_pos = None
 
+pathfinding_mode_dict = {0:"BFS",1:"DFS"}
+mode_index = 0
+
 start_finding = False
 
 def click_to_draw(grid,row,col):
@@ -56,7 +59,23 @@ def claer_grid(event):
 def finding(event):
     if event.key == pygame.K_SPACE:
         if start_pos and end_pos:
-            gal.Bfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
+            if pathfinding_mode_dict[mode_index] == "BFS":
+                gal.Bfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
+            elif pathfinding_mode_dict[mode_index] == "DFS":
+                gal.Dfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
+
+def mode_select(event):
+    global mode_index
+    if event.key == pygame.K_LEFT:
+        if mode_index - 1 >= 0:
+            mode_index -= 1
+        else:
+            mode_index = 1
+    if event.key == pygame.K_RIGHT:
+        if mode_index + 1 <= 1:
+            mode_index += 1
+        else:
+            mode_index = 0
 
 is_running = True
 while is_running:
@@ -90,6 +109,8 @@ while is_running:
             claer_grid(event)
             #start finding
             finding(event)
+            #select
+            mode_select(event)
 
     screen.fill(WHILE)
 
@@ -97,7 +118,7 @@ while is_running:
     gal.draw_grid(screen,ROW,WIDTH)
 
     pygame.display.flip()
-    pygame.display.set_caption(f"Pathfinder for Python ({clock.get_fps():.2f})")
+    pygame.display.set_caption(f"Pathfinder for Python: {pathfinding_mode_dict[mode_index]} ({clock.get_fps():.2f})")
     clock.tick(60)
 
 pygame.quit()
