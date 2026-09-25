@@ -14,6 +14,8 @@ You can use this in your **terminal** to install the **pygame**:
 ### Keybord
 - `c` : clear all
 - `space` : start
+- ` left ` : change mode to the left
+- ` right ` : change mode to the right
 
 ### Mouse
 
@@ -26,6 +28,27 @@ You can use this in your **terminal** to install the **pygame**:
 # BFS
 
 You can call ` Bfs_alogorithm() ` from ` general_algorithm.py `, it had 8 parameters:
+
+- **screen**
+    - A **pygame screen object** used to disply the process.
+- **grid**
+    - A grid that made by ` create_grid() ` function in ` general_algorithm.py `.
+- **start**
+    - A **starting node** of the path.
+- **end**
+    - An **destination node** of the path.
+- **rows**
+    - **Totol rows** of the grid.
+- **width**
+    - The width of your screen
+- **step_by_step**
+    - If set to ` True `, the process is displayed **step by step**. If set to ` False `, the entrie process is displayed **all at once**. The **Default** is ` False `
+- **delay**
+    - Controls how long the screen update is delayed, measured in **milliseconds**. The **Default** is ` 1 `
+
+# DFS
+
+You can call ` Dfs_alogorithm() ` from ` general_algorithm.py `, it had 8 parameters:
 
 - **screen**
     - A **pygame screen object** used to disply the process.

@@ -97,6 +97,57 @@ def Bfs_alogorithm(screen ,grid, start ,end, rows, width, step_by_step = False, 
     path.reverse()
     make_path(path)
 
+# DFS
+def Dfs_alogorithm(screen ,grid, start ,end, rows, width, step_by_step = False, delay = 1):
+
+    visited = {start: None}
+    stack = deque([start])
+    meet_end = False
+
+    start_time = pygame.time.get_ticks()
+
+    while stack and not meet_end:
+
+        end_time = pygame.time.get_ticks()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return None
+
+        if end_time - start_time >= delay:
+            start_time = end_time
+
+            if not step_by_step:
+                for i in stack: # set all neighbor for butter animation
+                    find_neighbor(grid, i)
+                update_grid(screen,grid,rows,width)
+
+            node = stack.pop()
+            if node == end:
+                meet_end = True
+            
+            for neighbor in find_neighbor(grid, node):
+                if step_by_step:
+                    update_grid(screen,grid,rows,width)
+                if neighbor not in visited:
+                    if not neighbor.is_end():
+                        neighbor.set_visited()
+                    visited[neighbor] = node
+                    stack.append(neighbor)
+    
+    if end not in visited:
+        return None
+
+    path = []
+    node = end
+
+    while node is not None:
+        path.append(node)
+        node = visited[node]
+
+    path.reverse()
+    make_path(path)
 
 #Grid
 
