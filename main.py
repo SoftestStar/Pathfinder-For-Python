@@ -1,5 +1,6 @@
 import pygame
 import general_algorithm as gal
+import random
 
 ROW = 50
 WIDTH = 800
@@ -23,10 +24,16 @@ grid = gal.create_grid(ROW,WIDTH)
 start_pos = None
 end_pos = None
 
-pathfinding_mode_dict = {0:"BFS",1:"DFS"}
+pathfinding_mode_dict = {0:"BFS",1:"DFS",2:"Dijkstra"}
 mode_index = 0
 
 start_finding = False
+
+def ran_wall():
+    for row in grid:
+        for node in row:
+            if random.randint(0,100) >= 70:
+                node.set_wall()
 
 def click_to_draw(grid,row,col):
     global start_pos, end_pos
@@ -55,6 +62,7 @@ def claer_grid(event):
                 node.set_empty()
                 start_pos = None
                 end_pos = None
+        ran_wall()
 
 def finding(event):
     if event.key == pygame.K_SPACE:
@@ -63,6 +71,8 @@ def finding(event):
                 gal.Bfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
             elif pathfinding_mode_dict[mode_index] == "DFS":
                 gal.Dfs_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
+            elif pathfinding_mode_dict[mode_index] == "Dijkstra":
+                gal.Dijkstra_alogorithm(screen, grid,start_pos,end_pos,ROW,WIDTH,False)
 
 def mode_select(event):
     global mode_index
@@ -70,12 +80,14 @@ def mode_select(event):
         if mode_index - 1 >= 0:
             mode_index -= 1
         else:
-            mode_index = 1
+            mode_index = len(pathfinding_mode_dict.keys()) - 1
     if event.key == pygame.K_RIGHT:
-        if mode_index + 1 <= 1:
+        if mode_index + 1 <= len(pathfinding_mode_dict.keys()) - 1:
             mode_index += 1
         else:
             mode_index = 0
+
+ran_wall()
 
 is_running = True
 while is_running:

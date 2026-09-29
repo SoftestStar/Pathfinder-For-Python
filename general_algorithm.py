@@ -1,6 +1,7 @@
 import pygame
 import Node
 from collections import deque
+import heapq
 
 WHITE = (255,255,255)
 BLACK = (000,000,000)
@@ -136,6 +137,76 @@ def Dfs_alogorithm(screen ,grid, start ,end, rows, width, step_by_step = False, 
                     visited[neighbor] = node
                     stack.append(neighbor)
     
+    if end not in visited:
+        return None
+
+    path = []
+    node = end
+
+    while node is not None:
+        path.append(node)
+        node = visited[node]
+
+    path.reverse()
+    make_path(path)
+
+#Dijkstra
+def Dijkstra_alogorithm(screen ,grid, start ,end, rows, width, step_by_step = False, delay = 1):
+
+    start.priority = 0
+    counter = 0
+
+    visited = {start: None}
+    priority_queue = []
+    heapq.heappush(priority_queue, (start.priority,counter,start)) # add the counter in the case priority had the same number
+
+    finalized = set()
+
+    meet_end = False
+    
+    start_time = pygame.time.get_ticks()
+
+    while priority_queue and not meet_end:
+        end_time = pygame.time.get_ticks()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return None
+
+        if end_time - start_time >= delay:
+            start_time = end_time
+        
+            if not step_by_step:
+                for _, _, node in priority_queue: # set all neighbor for butter animation
+                    find_neighbor(grid, node)
+                update_grid(screen,grid,rows,width)
+
+            dist, _, node = heapq.heappop(priority_queue)
+
+            if node in finalized:
+                continue
+
+            finalized.add(node)
+
+            if node == end:
+                meet_end = True
+            
+            for neighbor in find_neighbor(grid, node):
+
+                if step_by_step:
+                    update_grid(screen,grid,rows,width)
+
+                if dist + 1  < neighbor.priority:
+                    neighbor.priority = dist + 1
+
+                    if not neighbor.is_end():
+                        neighbor.set_visited()
+
+                    visited[neighbor] = node
+                    heapq.heappush(priority_queue, (neighbor.priority,counter,neighbor))
+                    counter += 1
+
     if end not in visited:
         return None
 

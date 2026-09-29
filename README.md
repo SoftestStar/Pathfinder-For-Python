@@ -7,7 +7,9 @@
 You may need a **pygame** library to run this project.
 You can use this in your **terminal** to install the **pygame**: 
 
-` pip install pygame `
+```
+pip install pygame 
+```
 
 # Button
 
@@ -25,30 +27,9 @@ You can use this in your **terminal** to install the **pygame**:
 
 - `right click` : mark as empty
 
-# BFS
+# Alogorithm
 
-You can call ` Bfs_alogorithm() ` from ` general_algorithm.py `, it had 8 parameters:
-
-- **screen**
-    - A **pygame screen object** used to disply the process.
-- **grid**
-    - A grid that made by ` create_grid() ` function in ` general_algorithm.py `.
-- **start**
-    - A **starting node** of the path.
-- **end**
-    - An **destination node** of the path.
-- **rows**
-    - **Totol rows** of the grid.
-- **width**
-    - The width of your screen
-- **step_by_step**
-    - If set to ` True `, the process is displayed **step by step**. If set to ` False `, the entrie process is displayed **all at once**. The **Default** is ` False `
-- **delay**
-    - Controls how long the screen update is delayed, measured in **milliseconds**. The **Default** is ` 1 `
-
-# DFS
-
-You can call ` Dfs_alogorithm() ` from ` general_algorithm.py `, it had 8 parameters:
+You can call ` Bfs_alogorithm() `, ` Dfs_alogorithm() ` and ` Dijkstra_alogorithm() `  from ` general_algorithm.py `, it had 8 parameters:
 
 - **screen**
     - A **pygame screen object** used to disply the process.

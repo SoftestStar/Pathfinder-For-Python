@@ -10,6 +10,7 @@ PURPLE = (128, 0, 128)
 
 class create_node:
     def __init__(self, row, col, width, all_rows):
+        self.priority = float('inf')
         self.row = row
         self.col = col
 
@@ -28,9 +29,6 @@ class create_node:
     def draw(self, screen):
         #draw a cube in screen
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.width))
-
-    def update_neighbors(self, grid):
-        pass
 
     #chack color
     def is_empty(self):
@@ -63,7 +61,3 @@ class create_node:
         self.color = BLUE
     def set_currenly_visit(self):
         self.color = GREEN
-
-    def __lt__(self, other_node): # function for compare Node
-        pass
-
